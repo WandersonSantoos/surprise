@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Para a minha querida Helena</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonte romântica -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #000000, #330033);
+      touch-action: manipulation;
+    }
+
+    #teAmoText {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ff4a4a;
+      font-size: 45px;
+      font-weight: normal;
+      text-align: center;
+      animation: fadeIn 2s ease-out, pulse 1.5s infinite;
+      cursor: pointer;
+      z-index: 10;
+      text-shadow: 0 0 10px #ff4a4a, 0 0 20px #ff4a4a;
+    }
+
+    #message {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 28px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 11;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .rain {
+      position: absolute;
+      top: -100px;
+      color: #ff69b4;
+      animation: fall linear infinite;
+      font-size: 18px;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    audio {
+      display: none;
+    }
+   
+  </style>
+</head>
+<body>
+
+  <div id="teAmoText" role="button" aria-label="Clique para mostrar a mensagem">
+    💖 Para o Amor da Minha Vida 💖
+  </div>
+
+  <div id="message">
+    Feliz 1 mês de namoro oficialmente KKK,<br>
+    TE AMO SENHORITA HELENA... 💖
+  </div>
+
+  <canvas id="clickParticles"></canvas>
+
+  <!-- Música opcional -->
+  
+  <audio autoplay loop>
+    <source src="New-West-Those-Eyes.mp3" type="audio/mpeg">
+  </audio>
+ 
+
+  <script>
+    const canvas = document.getElementById('clickParticles');
+    const ctx = canvas.getContext('2d');
+    const message = document.getElementById('message');
+    const teAmoText = document.getElementById('teAmoText');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function createHeartParticles(x, y) {
+      for (let i = 0; i < 15; i++) {
+        particles.push({
+          x,
+          y,
+          size: Math.random() * 24 + 12,
+          speedX: (Math.random() - 0.5) * 4,
+          speedY: (Math.random() - 0.5) * 4,
+          alpha: 1,
+          rotation: Math.random() * 360
+        });
+      }
+    }
+
+    function drawHeart(x, y, size, alpha, rotation) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation * Math.PI / 180);
+      ctx.font = `${size}px serif`;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#ff69b4';
+      ctx.fillText('❤️', 0, 0);
+      ctx.restore();
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.alpha -= 0.015;
+        p.rotation += 2;
+      });
+      particles = particles.filter(p => p.alpha > 0);
+      particles.forEach(p => drawHeart(p.x, p.y, p.size, p.alpha, p.rotation));
+      requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+
+    document.addEventListener('click', (e) => {
+      createHeartParticles(e.clientX, e.clientY);
+    });
+
+    document.addEventListener('touchstart', (e) => {
+      for (let touch of e.touches) {
+        createHeartParticles(touch.clientX, touch.clientY);
+      }
+    });
+
+    function createRain() {
+      const rain = document.createElement('div');
+      rain.classList.add('rain');
+      rain.innerText = 'EU TE AMO!';
+      rain.style.left = Math.random() * window.innerWidth + 'px';
+      rain.style.animationDuration = (2 + Math.random() * 3) + 's';
+      rain.style.fontSize = (18 + Math.random() * 8) + 'px';
+      document.body.appendChild(rain);
+      setTimeout(() => rain.remove(), 6000);
+    }
+
+    setInterval(createRain, 150);
+
+    function showMessage() {
+      message.style.opacity = 1;
+      setTimeout(() => {
+        message.style.opacity = 0;
+      }, 4000);
+    }
+
+    teAmoText.addEventListener('click', showMessage);
+    teAmoText.addEventListener('touchstart', showMessage);
+  </script>
+
+</body>
+</html>
