@@ -26,7 +26,4 @@ Este site exibe uma mensagem especial com efeitos visuais de corações, animaç
 
 ---
 
-## 🖼️ Prévia
-
-> 💡 *Você pode tirar um print ou gravar um vídeo e adicionar aqui futuramente:*
 
